@@ -32,12 +32,12 @@
 
       Log.prototype.disable = function() {
         this.enabled = false;
-        return console.log('CUSTOM-LOG: .' + this.level + ' has been disabled.');
+        return console.log('CUSTOM-LOG: ' + this.level + ' has been disabled.');
       };
 
       Log.prototype.enable = function() {
         this.enabled = true;
-        return console.log('CUSTOM-LOG: .' + this.level + ' is now enabled.');
+        return console.log('CUSTOM-LOG: ' + this.level + ' is now enabled.');
       };
 
       return Log;

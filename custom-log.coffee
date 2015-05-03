@@ -36,11 +36,11 @@ customLog= ( init ) ->
 
 		disable: =>
 			@enabled= false
-			console.log 'CUSTOM-LOG: .'+ @level+ ' has been disabled.'
+			console.log 'CUSTOM-LOG: '+ @level+ ' has been disabled.'
 
 		enable: =>
 			@enabled= true
-			console.log 'CUSTOM-LOG: .'+ @level+ ' is now enabled.'
+			console.log 'CUSTOM-LOG: '+ @level+ ' is now enabled.'
 
 
 
