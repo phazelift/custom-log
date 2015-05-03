@@ -1,5 +1,7 @@
 
+
 customLog= require 'custom-log'
+# binds to window when load in browser
 
 # the log key relates to the default log function and is a reserved keyword in the initialization object
 # create custom log levels and give their messages a prefix
