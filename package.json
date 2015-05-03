@@ -1,0 +1,24 @@
+{
+  "name": "custom-log",
+  "version": "0.1.0",
+  "description": "A tiny flexible logger",
+  "main": "custom-log.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phazelift/custom-log"
+  },
+  "keywords": [
+    "logger",
+    "log",
+    "console.log"
+  ],
+  "author": "Dennis Raymondo <phazelift@gmail.com> (https://github.com/phazelift/)",
+  "license": "GPL-3",
+  "bugs": {
+    "url": "https://github.com/phazelift/custom-log/issues"
+  },
+  "homepage": "https://github.com/phazelift/custom-log"
+}
