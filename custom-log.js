@@ -50,7 +50,7 @@
     if (typeof init === 'object') {
       fn = function(level, message) {
         if (level === 'log') {
-          return log.message = message;
+          return log = new Log(level, message).log;
         } else {
           return log[level] = new Log(level, message).log;
         }

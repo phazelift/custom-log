@@ -49,10 +49,12 @@ customLog= ( init ) ->
 
 	if typeof init is 'object'
 		for level, message of init then do (level, message) ->
+
 			if level is 'log'
-				log.message= message
+				log= new Log( level, message ).log
 			else
 				log[ level ]= new Log( level, message ).log
+
 
 	return log
 
@@ -67,4 +69,3 @@ else if typeof module isnt 'undefined'
 
 else if typeof window isnt 'undefined'
 	window.customLog= customLog
-
