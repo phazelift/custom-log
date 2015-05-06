@@ -27,7 +27,7 @@ customLog= ( init ) ->
 
 			@log= =>
 				if @enabled
-					console.log @message.concat arguments...
+					console.log.apply console, [ @message ].concat arguments...
 
 			for name, prop of @
 				if ( @.hasOwnProperty name ) and ( name isnt 'log' )

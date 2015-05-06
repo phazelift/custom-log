@@ -6,9 +6,9 @@ A tiny (~1kb) flexible logger, very basic, simple and fast. Will add some featur
 For browser, node, amd.
 
 custom-log is targeted at the Browser as a tiny helper that makes available any custom log function you can
-create yourself and which can be enabled/disabled individually.
+create yourself, and which can be enabled/disabled individually.
 
-Although there are plenty full-fleged loggers for use in node, you can use this one instead if you don't
+Although there are plenty full-fledged loggers for use in node, you can use this one instead if you don't
 need a zillion features, but rather prefer simplicity.
 ___
 

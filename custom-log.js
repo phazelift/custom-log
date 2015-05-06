@@ -18,7 +18,7 @@
           return function() {
             var ref;
             if (_this.enabled) {
-              return console.log((ref = _this.message).concat.apply(ref, arguments));
+              return console.log.apply(console, (ref = [_this.message]).concat.apply(ref, arguments));
             }
           };
         })(this);
