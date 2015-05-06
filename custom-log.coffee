@@ -44,8 +44,8 @@ customLog= ( init ) ->
 
 
 
-	stringArg	= init if typeof init is 'string'
-	log 			= new Log( 'log', stringArg ).log
+	prefixMsg	= init if typeof init is 'string'
+	log 			= new Log( 'log', prefixMsg ).log
 
 	if typeof init is 'object'
 		for level, message of init then do (level, message) ->
@@ -57,7 +57,6 @@ customLog= ( init ) ->
 
 
 	return log
-
 
 
 

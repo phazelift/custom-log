@@ -5,7 +5,7 @@
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   customLog = function(init) {
-    var Log, fn, level, log, message, stringArg;
+    var Log, fn, level, log, message, prefixMsg;
     Log = (function() {
       function Log(level1, message1) {
         var name, prop;
@@ -44,9 +44,9 @@
 
     })();
     if (typeof init === 'string') {
-      stringArg = init;
+      prefixMsg = init;
     }
-    log = new Log('log', stringArg).log;
+    log = new Log('log', prefixMsg).log;
     if (typeof init === 'object') {
       fn = function(level, message) {
         if (level === 'log') {
