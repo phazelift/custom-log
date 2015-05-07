@@ -1,7 +1,7 @@
 custom-log
 ==========
 
-A tiny (~1kb) flexible logger, very basic, simple and fast. Will add some features over time.
+A tiny (~2kb) flexible logger, very basic, simple and fast. Will add some features over time.
 
 For browser, node, amd.
 

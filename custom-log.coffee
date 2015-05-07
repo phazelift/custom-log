@@ -20,14 +20,18 @@
 
 customLog= ( init ) ->
 
+	CUSTOM_LOG= 'custom-log: '
+
 	class Log
+
+		log= console.log
 
 		constructor: ( @level= 'log', @message= '' ) ->
 			@enabled= true
 
 			@log= =>
 				if @enabled
-					console.log.apply console, [ @message ].concat arguments...
+					log.apply console, [ @message ].concat arguments...
 
 			for name, prop of @
 				if ( @.hasOwnProperty name ) and ( name isnt 'log' )
@@ -36,27 +40,45 @@ customLog= ( init ) ->
 
 		disable: =>
 			@enabled= false
-			console.log 'CUSTOM-LOG: '+ @level+ ' has been disabled.'
+			log CUSTOM_LOG+ '.'+ @level+ ' has been disabled'
 
 		enable: =>
 			@enabled= true
-			console.log 'CUSTOM-LOG: '+ @level+ ' is now enabled.'
+			log CUSTOM_LOG+ '.'+ @level+ ' is now enabled'
+
+		assert: ( predicate, description= '' ) =>
+		  if description
+		    description= '"'+ description+ '"'
+		  else if typeof predicate is 'string'
+		    description= predicate
+
+		  if typeof predicate is 'string'
+		    predicate= eval predicate
+
+		  if predicate then predicate= 'TRUE' else predicate= 'FALSE'
+
+		  @log '\n\t'+ customLog.assertMessage+ '('+ description+ ') == '+ predicate+ '\n'
+
+# end of Log
 
 
-
-	prefixMsg	= init if typeof init is 'string'
-	log 			= new Log( 'log', prefixMsg ).log
+	prefixMsg		= init if typeof init is 'string'
+	logInstance	= new Log 'log', prefixMsg
+	log 				= logInstance.log
 
 	if typeof init is 'object'
 		for level, message of init then do (level, message) ->
 
-			if level is 'log'
-				log= new Log( level, message ).log
-			else
-				log[ level ]= new Log( level, message ).log
-
+			switch level
+				when 'log'		then logInstance.message= message
+				when 'assert' then customLog.assertMessage= message
+				else log[ level ]= new Log( level, message ).log
 
 	return log
+
+customLog.assertMessage= 'Assert: '
+
+# end of customLog
 
 
 

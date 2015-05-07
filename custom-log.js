@@ -5,12 +5,18 @@
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   customLog = function(init) {
-    var Log, fn, level, log, message, prefixMsg;
+    var CUSTOM_LOG, Log, fn, level, log, logInstance, message, prefixMsg;
+    CUSTOM_LOG = 'custom-log: ';
     Log = (function() {
+      var log;
+
+      log = console.log;
+
       function Log(level1, message1) {
         var name, prop;
         this.level = level1 != null ? level1 : 'log';
         this.message = message1 != null ? message1 : '';
+        this.assert = bind(this.assert, this);
         this.enable = bind(this.enable, this);
         this.disable = bind(this.disable, this);
         this.enabled = true;
@@ -18,7 +24,7 @@
           return function() {
             var ref;
             if (_this.enabled) {
-              return console.log.apply(console, (ref = [_this.message]).concat.apply(ref, arguments));
+              return log.apply(console, (ref = [_this.message]).concat.apply(ref, arguments));
             }
           };
         })(this);
@@ -32,12 +38,32 @@
 
       Log.prototype.disable = function() {
         this.enabled = false;
-        return console.log('CUSTOM-LOG: ' + this.level + ' has been disabled.');
+        return log(CUSTOM_LOG + '.' + this.level + ' has been disabled');
       };
 
       Log.prototype.enable = function() {
         this.enabled = true;
-        return console.log('CUSTOM-LOG: ' + this.level + ' is now enabled.');
+        return log(CUSTOM_LOG + '.' + this.level + ' is now enabled');
+      };
+
+      Log.prototype.assert = function(predicate, description) {
+        if (description == null) {
+          description = '';
+        }
+        if (description) {
+          description = '"' + description + '"';
+        } else if (typeof predicate === 'string') {
+          description = predicate;
+        }
+        if (typeof predicate === 'string') {
+          predicate = eval(predicate);
+        }
+        if (predicate) {
+          predicate = 'TRUE';
+        } else {
+          predicate = 'FALSE';
+        }
+        return this.log('\n\t' + customLog.assertMessage + '(' + description + ') == ' + predicate + '\n');
       };
 
       return Log;
@@ -46,13 +72,17 @@
     if (typeof init === 'string') {
       prefixMsg = init;
     }
-    log = new Log('log', prefixMsg).log;
+    logInstance = new Log('log', prefixMsg);
+    log = logInstance.log;
     if (typeof init === 'object') {
       fn = function(level, message) {
-        if (level === 'log') {
-          return log = new Log(level, message).log;
-        } else {
-          return log[level] = new Log(level, message).log;
+        switch (level) {
+          case 'log':
+            return logInstance.message = message;
+          case 'assert':
+            return customLog.assertMessage = message;
+          default:
+            return log[level] = new Log(level, message).log;
         }
       };
       for (level in init) {
@@ -62,6 +92,8 @@
     }
     return log;
   };
+
+  customLog.assertMessage = 'Assert: ';
 
   if ((typeof define !== "undefined" && define !== null) && ('function' === typeof define) && define.amd) {
     define('customLog', [], function() {
