@@ -33,14 +33,12 @@ customLog= ( init ) ->
 
 	class Log
 
-		log= console.log
-
 		constructor: ( @level= 'log', @message= '' ) ->
 			@enabled= true
 
 			@log= =>
 				if @enabled
-					log.apply console, [ @message ].concat arguments...
+					console.log.apply console, [ @message ].concat arguments...
 
 			for name, prop of @
 				if ( @.hasOwnProperty name ) and ( name isnt 'log' )
@@ -49,11 +47,11 @@ customLog= ( init ) ->
 
 		disable: =>
 			@enabled= false
-			log CUSTOM_LOG+ '.'+ @level+ ' has been disabled'
+			console.log CUSTOM_LOG+ '.'+ @level+ ' is disabled'
 
 		enable: =>
 			@enabled= true
-			log CUSTOM_LOG+ '.'+ @level+ ' is now enabled'
+			console.log CUSTOM_LOG+ '.'+ @level+ ' is enabled'
 
 		assert: ( predicate, description= '' ) =>
 		  if typeof predicate is 'string'

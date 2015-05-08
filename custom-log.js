@@ -20,10 +20,6 @@
     var CUSTOM_LOG, Log, enact, fn, level, log, logInstance, message, prefixMsg;
     CUSTOM_LOG = 'custom-log: ';
     Log = (function() {
-      var log;
-
-      log = console.log;
-
       function Log(level1, message1) {
         var name, prop;
         this.level = level1 != null ? level1 : 'log';
@@ -36,7 +32,7 @@
           return function() {
             var ref;
             if (_this.enabled) {
-              return log.apply(console, (ref = [_this.message]).concat.apply(ref, arguments));
+              return console.log.apply(console, (ref = [_this.message]).concat.apply(ref, arguments));
             }
           };
         })(this);
@@ -50,12 +46,12 @@
 
       Log.prototype.disable = function() {
         this.enabled = false;
-        return log(CUSTOM_LOG + '.' + this.level + ' has been disabled');
+        return console.log(CUSTOM_LOG + '.' + this.level + ' is disabled');
       };
 
       Log.prototype.enable = function() {
         this.enabled = true;
-        return log(CUSTOM_LOG + '.' + this.level + ' is now enabled');
+        return console.log(CUSTOM_LOG + '.' + this.level + ' is enabled');
       };
 
       Log.prototype.assert = function(predicate, description) {

@@ -85,6 +85,18 @@ ___
 change log
 ==========
 
+0.1.9
+
+Fixed bug that caused a crash on using the disable or enable function
+
+___
+
+0.1.6
+
+Added log.assert function
+
+___
+
 0.1.0
 
 Initial commit.
