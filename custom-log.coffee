@@ -17,7 +17,14 @@
 
 "use strict"
 
-intoArray= ( string ) -> string.split ' '
+intoArray= ( args ) ->
+	if args.length < 2
+		if typeof args[ 0 ] is 'string'
+			args= args.join( '' ).replace( /^\s+|\s+$/g, '' ).replace( /\s+/g, ' ' ).split ' '
+		else if (typeof args[ 0 ] is 'object') and (args[ 0 ] instanceof Array)
+			args= args[ 0 ]
+	return args
+
 
 
 customLog= ( init ) ->
@@ -49,17 +56,17 @@ customLog= ( init ) ->
 			log CUSTOM_LOG+ '.'+ @level+ ' is now enabled'
 
 		assert: ( predicate, description= '' ) =>
-		  if description
-		    description= '"'+ description+ '"'
-		  else if typeof predicate is 'string'
+		  if typeof predicate is 'string'
 		    description= predicate
+		  if description
+			  description= '('+ description+ ') == '
 
 		  if typeof predicate is 'string'
 		    predicate= eval predicate
 
 		  if predicate then predicate= 'TRUE' else predicate= 'FALSE'
 
-		  @log '\n\t'+ customLog.assertMessage+ '('+ description+ ') == '+ predicate+ '\n'
+		  @log '\n\t'+ customLog.assertMessage+ description+ predicate+ '\n'
 
 # end of Log
 
@@ -67,21 +74,17 @@ customLog= ( init ) ->
 	logInstance	= new Log 'log', prefixMsg
 	log 				= logInstance.log
 
-	log.disable= ( names ) ->
+	# one function for enable and disable
+	enact= ( method, names... ) ->
 		names= intoArray names
 		for name in names
 			if name is 'log'
-				logInstance.disable()
+				logInstance[ method ]()
 			else if log[ name ]?
-				log[ name ].disable()
+				log[ name ][ method ]()
 
-	log.enable= ( names ) ->
-		names= intoArray names
-		for name in names
-			if name is 'log'
-				logInstance.enable()
-			else if log[ name ]?
-				log[ name ].enable()
+	log.enable	= -> enact 'enable', arguments...
+	log.disable	= -> enact 'disable', arguments...
 
 	if typeof init is 'object'
 		for level, message of init then do (level, message) ->

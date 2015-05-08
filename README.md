@@ -62,6 +62,22 @@ log.dal.disable();
 // or turn them on again:
 log.dal.enable();
 
+// disable or enable multiple levels at once
+// argument can be either (space seperated)String, Array of strings, multiple String arguments
+log.disable( 'dal listener error log' );
+log.enable( 'error', 'listener', 'log' );
+
+// use build-in assert:
+log.assert( 2 > 1 );
+// LOG:
+//	 Assert: TRUE
+
+log.assert( 2 > 1, '2 > 1' );
+// or
+log.assert( '2 > 1' );
+// LOG:
+//	 Assert: (2 > 1) == TRUE
+
 ```
 ___
 

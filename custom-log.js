@@ -2,14 +2,22 @@
 (function() {
   "use strict";
   var customLog, intoArray,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    slice = [].slice;
 
-  intoArray = function(string) {
-    return string.split(' ');
+  intoArray = function(args) {
+    if (args.length < 2) {
+      if (typeof args[0] === 'string') {
+        args = args.join('').replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ').split(' ');
+      } else if ((typeof args[0] === 'object') && (args[0] instanceof Array)) {
+        args = args[0];
+      }
+    }
+    return args;
   };
 
   customLog = function(init) {
-    var CUSTOM_LOG, Log, fn, level, log, logInstance, message, prefixMsg;
+    var CUSTOM_LOG, Log, enact, fn, level, log, logInstance, message, prefixMsg;
     CUSTOM_LOG = 'custom-log: ';
     Log = (function() {
       var log;
@@ -54,10 +62,11 @@
         if (description == null) {
           description = '';
         }
-        if (description) {
-          description = '"' + description + '"';
-        } else if (typeof predicate === 'string') {
+        if (typeof predicate === 'string') {
           description = predicate;
+        }
+        if (description) {
+          description = '(' + description + ') == ';
         }
         if (typeof predicate === 'string') {
           predicate = eval(predicate);
@@ -67,7 +76,7 @@
         } else {
           predicate = 'FALSE';
         }
-        return this.log('\n\t' + customLog.assertMessage + '(' + description + ') == ' + predicate + '\n');
+        return this.log('\n\t' + customLog.assertMessage + description + predicate + '\n');
       };
 
       return Log;
@@ -78,37 +87,28 @@
     }
     logInstance = new Log('log', prefixMsg);
     log = logInstance.log;
-    log.disable = function(names) {
-      var i, len, name, results;
+    enact = function() {
+      var i, len, method, name, names, results;
+      method = arguments[0], names = 2 <= arguments.length ? slice.call(arguments, 1) : [];
       names = intoArray(names);
       results = [];
       for (i = 0, len = names.length; i < len; i++) {
         name = names[i];
         if (name === 'log') {
-          results.push(logInstance.disable());
+          results.push(logInstance[method]());
         } else if (log[name] != null) {
-          results.push(log[name].disable());
+          results.push(log[name][method]());
         } else {
           results.push(void 0);
         }
       }
       return results;
     };
-    log.enable = function(names) {
-      var i, len, name, results;
-      names = intoArray(names);
-      results = [];
-      for (i = 0, len = names.length; i < len; i++) {
-        name = names[i];
-        if (name === 'log') {
-          results.push(logInstance.enable());
-        } else if (log[name] != null) {
-          results.push(log[name].enable());
-        } else {
-          results.push(void 0);
-        }
-      }
-      return results;
+    log.enable = function() {
+      return enact.apply(null, ['enable'].concat(slice.call(arguments)));
+    };
+    log.disable = function() {
+      return enact.apply(null, ['disable'].concat(slice.call(arguments)));
     };
     if (typeof init === 'object') {
       fn = function(level, message) {
