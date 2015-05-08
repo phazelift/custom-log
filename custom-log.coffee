@@ -17,6 +17,8 @@
 
 "use strict"
 
+intoArray= ( string ) -> string.split ' '
+
 
 customLog= ( init ) ->
 
@@ -61,10 +63,25 @@ customLog= ( init ) ->
 
 # end of Log
 
-
 	prefixMsg		= init if typeof init is 'string'
 	logInstance	= new Log 'log', prefixMsg
 	log 				= logInstance.log
+
+	log.disable= ( names ) ->
+		names= intoArray names
+		for name in names
+			if name is 'log'
+				logInstance.disable()
+			else if log[ name ]?
+				log[ name ].disable()
+
+	log.enable= ( names ) ->
+		names= intoArray names
+		for name in names
+			if name is 'log'
+				logInstance.enable()
+			else if log[ name ]?
+				log[ name ].enable()
 
 	if typeof init is 'object'
 		for level, message of init then do (level, message) ->
@@ -79,7 +96,6 @@ customLog= ( init ) ->
 customLog.assertMessage= 'Assert: '
 
 # end of customLog
-
 
 
 if define? and ( 'function' is typeof define ) and define.amd
