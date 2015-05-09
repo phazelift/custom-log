@@ -17,6 +17,8 @@
 
 "use strict"
 
+
+# taken from types.js
 intoArray= ( args ) ->
 	if args.length < 2
 		if typeof args[ 0 ] is 'string'
@@ -31,6 +33,7 @@ customLog= ( init ) ->
 
 	CUSTOM_LOG= 'custom-log: '
 
+
 	class Log
 
 		constructor: ( @level= 'log', @message= '' ) ->
@@ -40,18 +43,20 @@ customLog= ( init ) ->
 				if @enabled
 					console.log.apply console, [ @message ].concat arguments...
 
-			for name, prop of @
-				if ( @.hasOwnProperty name ) and ( name isnt 'log' )
-					@log[ name ]= prop
+			for prop, value of @
+				if ( @.hasOwnProperty prop ) and ( prop isnt 'log' )
+					@log[ prop ]= value
 
 
 		disable: =>
 			@enabled= false
 			console.log CUSTOM_LOG+ '.'+ @level+ ' is disabled'
 
+
 		enable: =>
 			@enabled= true
 			console.log CUSTOM_LOG+ '.'+ @level+ ' is enabled'
+
 
 		assert: ( predicate, description= '' ) =>
 		  if typeof predicate is 'string'
@@ -66,23 +71,26 @@ customLog= ( init ) ->
 
 		  @log '\n\t'+ customLog.assertMessage+ description+ predicate+ '\n'
 
+
 # end of Log
+
 
 	prefixMsg		= init if typeof init is 'string'
 	logInstance	= new Log 'log', prefixMsg
 	log 				= logInstance.log
 
 	# one function for enable and disable
-	enact= ( method, names... ) ->
-		names= intoArray names
-		for name in names
-			if name is 'log'
+	enact= ( method, levels... ) ->
+		levels= intoArray levels
+		for level in levels
+			if level is 'log'
 				logInstance[ method ]()
-			else if log[ name ]?
-				log[ name ][ method ]()
+			else if log[ level ]?
+				log[ level ][ method ]()
 
 	log.enable	= -> enact 'enable', arguments...
 	log.disable	= -> enact 'disable', arguments...
+
 
 	if typeof init is 'object'
 		for level, message of init then do (level, message) ->

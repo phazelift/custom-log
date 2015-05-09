@@ -56,7 +56,7 @@ log.info( 'easy!' );
 log.dal( 'Success! Payload: ', 'some payload' );
 // DAL: Success! Payload: some payload
 
-// now turn of dal messages:
+// now temporarily turn off dal messages:
 log.dal.disable();
 
 // or turn them on again:
@@ -77,6 +77,15 @@ log.assert( 2 > 1, '2 > 1' );
 log.assert( '2 > 1' );
 // LOG:
 //	 Assert: (2 > 1) == TRUE
+
+// change the default assert prefix message:
+customLog.assertPrefix( '!! ');
+// or add 'assert' to the config object:
+var log= customLog({
+	assert: '!! ',
+	log		: '> ',
+	// ...
+});
 
 ```
 ___

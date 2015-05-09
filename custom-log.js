@@ -21,7 +21,7 @@
     CUSTOM_LOG = 'custom-log: ';
     Log = (function() {
       function Log(level1, message1) {
-        var name, prop;
+        var prop, value;
         this.level = level1 != null ? level1 : 'log';
         this.message = message1 != null ? message1 : '';
         this.assert = bind(this.assert, this);
@@ -36,10 +36,10 @@
             }
           };
         })(this);
-        for (name in this) {
-          prop = this[name];
-          if ((this.hasOwnProperty(name)) && (name !== 'log')) {
-            this.log[name] = prop;
+        for (prop in this) {
+          value = this[prop];
+          if ((this.hasOwnProperty(prop)) && (prop !== 'log')) {
+            this.log[prop] = value;
           }
         }
       }
@@ -84,16 +84,16 @@
     logInstance = new Log('log', prefixMsg);
     log = logInstance.log;
     enact = function() {
-      var i, len, method, name, names, results;
-      method = arguments[0], names = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-      names = intoArray(names);
+      var i, len, level, levels, method, results;
+      method = arguments[0], levels = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      levels = intoArray(levels);
       results = [];
-      for (i = 0, len = names.length; i < len; i++) {
-        name = names[i];
-        if (name === 'log') {
+      for (i = 0, len = levels.length; i < len; i++) {
+        level = levels[i];
+        if (level === 'log') {
           results.push(logInstance[method]());
-        } else if (log[name] != null) {
-          results.push(log[name][method]());
+        } else if (log[level] != null) {
+          results.push(log[level][method]());
         } else {
           results.push(void 0);
         }
