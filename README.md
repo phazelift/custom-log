@@ -59,21 +59,25 @@ log.dal( 'Success! Payload: ', 'some payload' );
 // now temporarily turn off dal messages:
 log.dal.disable();
 
-// or turn them on again:
+// and turn them on again:
 log.dal.enable();
 
 // disable or enable multiple levels at once
-// argument can be either (space seperated)String, Array of strings, multiple String arguments
+// arguments can be either (space seperated)String, Array of strings, multiple Strings
 log.disable( 'dal listener error log' );
+// or
 log.enable( 'error', 'listener', 'log' );
+// or
+log.enable( ['error', 'listener', 'log'] );
 
 // use build-in assert:
 log.assert( 2 > 1 );
 // LOG:
 //	 Assert: TRUE
 
+// or with a description
 log.assert( 2 > 1, '2 > 1' );
-// or
+// or wrap in a string to automatically fill the description
 log.assert( '2 > 1' );
 // LOG:
 //	 Assert: (2 > 1) == TRUE
