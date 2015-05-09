@@ -79,7 +79,7 @@ log.assert( '2 > 1' );
 //	 Assert: (2 > 1) == TRUE
 
 // change the default assert prefix message:
-customLog.assertPrefix( '!! ');
+customLog.assertMessage( '!! ' );
 // or add 'assert' to the config object:
 var log= customLog({
 	assert: '!! ',
