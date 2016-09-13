@@ -98,6 +98,11 @@ ___
 change log
 ==========
 
+0.2.1
+
+changes license to MIT
+___
+
 0.1.9
 
 Fixed bug that caused a crash on using the disable or enable function
@@ -115,3 +120,7 @@ ___
 Initial commit.
 
 ___
+
+###license
+
+MIT
