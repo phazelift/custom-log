@@ -44,12 +44,16 @@ customLog= ( init ) ->
 
 	class Log
 
-		constructor: ( @level= 'log', @message= '' ) ->
-			@enabled= true
+		constructor: ( level, prefix ) ->
+			@enabled	= true
+			@level	= level or 'log'
+			@prefix	= prefix or ''
 
 			@log= =>
 				if @enabled
-					console.log.apply console, [ @message ].concat arguments...
+					message= arguments
+					if @prefix then message= [ @prefix ].concat arguments...
+					console.log.apply console, message
 
 			for prop, value of @
 				if ( @.hasOwnProperty prop ) and ( prop isnt 'log' )
@@ -66,6 +70,9 @@ customLog= ( init ) ->
 			console.log CUSTOM_LOG+ '.'+ @level+ ' is enabled'
 
 
+		#
+		# this was a bad idea, it sucks and will be removed..
+		#
 		assert: ( predicate, description= '' ) =>
 		  if typeof predicate is 'string'
 		    description= predicate
@@ -79,12 +86,13 @@ customLog= ( init ) ->
 
 		  @log '\n\t'+ customLog.assertMessage+ description+ predicate+ '\n'
 
+	# end of Log
 
-# end of Log
+
 
 
 	prefixMsg		= init if typeof init is 'string'
-	logInstance	= new Log 'log', prefixMsg
+	logInstance		= new Log 'log', prefixMsg
 	log 				= logInstance.log
 
 	# one function for enable and disable
@@ -101,18 +109,20 @@ customLog= ( init ) ->
 
 
 	if typeof init is 'object'
-		for level, message of init then do (level, message) ->
+		for level, prefix of init then do (level, prefix) ->
 
 			switch level
-				when 'log'		then logInstance.message= message
-				when 'assert' then customLog.assertMessage= message
-				else log[ level ]= new Log( level, message ).log
+				when 'log'		then logInstance.prefix= prefix
+				when 'assert' then customLog.assertMessage= prefix
+				else log[ level ]= new Log( level, prefix ).log
 
 	return log
 
 customLog.assertMessage= 'Assert: '
 
 # end of customLog
+
+
 
 
 if define? and ( 'function' is typeof define ) and define.amd

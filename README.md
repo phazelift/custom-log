@@ -3,17 +3,20 @@ custom-log
 
 A tiny (~2kb) flexible logger, very basic, simple and fast. Will add some features over time.
 
-For browser, node, amd.
+custom-log is targeted at the Browser as a tiny helper that makes available any custom log function you can create yourself, and which can be enabled/disabled individually.
 
-custom-log is targeted at the Browser as a tiny helper that makes available any custom log function you can
-create yourself, and which can be enabled/disabled individually.
-
-Although there are plenty full-fledged loggers for use in node, you can use this one instead if you don't
-need a zillion features, but rather prefer simplicity.
+Although there are plenty full-fledged loggers for use in node, you can use this one instead if you don't need a zillion features but rather prefer simplicity.
 ___
 
 How to use?
 ---
+
+First install:
+>Browser: `<script src="./custom-log.min.js"></script>`
+
+>Node: `npm install --save custom-log`
+
+<br/>
 
 > `<function> customLog( <string>/<object> init )`
 
@@ -24,21 +27,18 @@ To set the base log function prefix in a init object, use the reserved 'log' key
 
 ```javascript
 
-// customLog is global when load in browser
-// but in node:
+// customLog is global when loaded in browser, for node use:
 var customLog= require( 'custom-log' );
 
 
-// create a single log function with prefix:
-var log= customLog( 'LOG: ' );
+// create a single log function without prefix:
+var log= customLog();
 
 log( 'hey!' );
-// LOG: hey!
+// hey!
 
 // or create a log function with multiple custom log functions attached to it:
 var log= customLog({
-	// when omitting log, no prefix for the default log function will be used
-	log			: 'LOG: ',
 	info		: 'INFO: ',
 	warning		: 'WARNING: ',
 	error		: 'ERROR: ',
@@ -48,7 +48,7 @@ var log= customLog({
 });
 
 log( 'hello' );
-// LOG: hello
+// hello
 
 log.info( 'easy!' );
 // INFO: easy!
@@ -69,34 +69,19 @@ log.disable( 'dal listener error log' );
 log.enable( 'error', 'listener', 'log' );
 // or
 log.enable( ['error', 'listener', 'log'] );
-
-// use build-in assert:
-log.assert( 2 > 1 );
-// LOG:
-//	 Assert: TRUE
-
-// or with a description
-log.assert( 2 > 1, '2 > 1' );
-// or wrap in a string to automatically fill the description
-log.assert( '2 > 1' );
-// LOG:
-//	 Assert: (2 > 1) == TRUE
-
-// change the default assert prefix message:
-customLog.assertMessage( '!! ' );
-// or add 'assert' to the config object:
-var log= customLog({
-	assert: '!! ',
-	log		: '> ',
-	// ...
-});
-
 ```
 ___
 
 
 change log
 ==========
+
+0.2.3
+
+-	removes leading space for default log without prefix
+-	log.assert is way too naive and you better use something like the 'assert' npm lib for that. log.assert is now deprecated and will be removed over time.
+
+---
 
 0.2.1
 
