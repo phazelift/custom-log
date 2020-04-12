@@ -1,10 +1,16 @@
 {
   "name": "custom-log",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A tiny flexible logger",
   "main": "custom-log.min.js",
   "scripts": {
+    "uglify": "uglifyjs custom-log.js -c -m -o custom-log.min.js",
+    "build": "coffee -c --transpile custom-log.coffee && npm run uglify",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest"
   },
   "repository": {
     "type": "git",

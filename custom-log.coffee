@@ -74,17 +74,17 @@ customLog= ( init ) ->
 		# this was a bad idea, it sucks and will be removed..
 		#
 		assert: ( predicate, description= '' ) =>
-		  if typeof predicate is 'string'
-		    description= predicate
-		  if description
-			  description= '('+ description+ ') == '
+			if typeof predicate is 'string'
+				description= predicate
+			if description
+				description= '('+ description+ ') == '
 
-		  if typeof predicate is 'string'
-		    predicate= eval predicate
+			if typeof predicate is 'string'
+				predicate= eval predicate
 
-		  if predicate then predicate= 'TRUE' else predicate= 'FALSE'
+			if predicate then predicate= 'TRUE' else predicate= 'FALSE'
 
-		  @log '\n\t'+ customLog.assertMessage+ description+ predicate+ '\n'
+			@log '\n\t'+ customLog.assertMessage+ description+ predicate+ '\n'
 
 	# end of Log
 
