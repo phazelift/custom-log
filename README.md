@@ -28,24 +28,32 @@ To set the base log function prefix in a init object, use the reserved 'log' key
 ```javascript
 
 // customLog is global when loaded in browser, for node use:
-var customLog= require( 'custom-log' );
+const customLog= require( 'custom-log' );
 
 
 // create a single log function without prefix:
-var log= customLog();
+const log= customLog();
 
 log( 'hey!' );
 // hey!
 
-// or create a log function with multiple custom log functions attached to it:
-var log= customLog({
+
+// create a log function with multiple custom log functions attached to it
+// you can silently enable/disable by adding settings if needed:
+const settings = {
+	silentDisable	: false	// default
+	silentEnable	: false	// default
+};
+
+const log= customLog({
 	info		: 'INFO: ',
 	warning		: 'WARNING: ',
 	error		: 'ERROR: ',
 	listener	: 'LISTENER: ',
 	dal			: 'DAL: '
-	// whateverNameYouMayNeed: 'whatever prefix message.. '
-});
+	// use the result of a function as prefix for logs
+	time		: () => new Date()
+}, settings );
 
 log( 'hello' );
 // hello
@@ -75,6 +83,14 @@ ___
 
 change log
 ==========
+
+0.3.0
+
+-	removes log.assert
+-	adds dynamic function prefix
+-	adds 'silentEnable' and 'silentDisable' initialization modes
+
+---
 
 0.2.3
 

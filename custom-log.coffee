@@ -26,8 +26,11 @@
 "use strict"
 
 
+CUSTOM_LOG = 'custom-log: '
+
+
 # taken from types.js
-intoArray= ( args ) ->
+intoArray = ( args ) ->
 	if args.length < 2
 		if typeof args[ 0 ] is 'string'
 			args= args.join( '' ).replace( /^\s+|\s+$/g, '' ).replace( /\s+/g, ' ' ).split ' '
@@ -36,66 +39,72 @@ intoArray= ( args ) ->
 	return args
 
 
+instanceOf	= ( type, value ) -> value instanceof type
 
-customLog= ( init ) ->
+forceObject = ( value ) ->
+	return if (typeof value is 'object') and (value isnt null) and not instanceOf(Boolean, value) and not instanceOf(Number, value) and not instanceOf(Array, value) and not instanceOf(RegExp, value) and not instanceOf(Date, value)
+		value
+	else {}
+#
+#
 
-	CUSTOM_LOG= 'custom-log: '
+
+
+#
+# prefixes is primarily for creating log.anyPrefix methods
+#
+customLog= ( prefixes, settings ) ->
+
+	# prefixes as string is for a only single log function with prefix
+	prefixMsg		= prefixes if typeof prefixes is 'string'
+	prefixes			= forceObject prefixes
+	settings			= forceObject settings
+
 
 
 	class Log
 
 		constructor: ( level, prefix ) ->
-			@enabled	= true
-			@level	= level or 'log'
-			@prefix	= prefix or ''
+			@enabled			= true
+			@level			= level or 'log'
+			@prefix			= prefix or ''
 
-			@log= =>
+			@log = (args...) =>
 				if @enabled
-					message= arguments
-					if @prefix then message= [ @prefix ].concat arguments...
+					prefix = if (typeof @prefix is 'function') then (@prefix args...) else @prefix
+					message = if @prefix then ([ prefix ].concat args...) else args
 					console.log.apply console, message
 
-			for prop, value of @
-				if ( @.hasOwnProperty prop ) and ( prop isnt 'log' )
-					@log[ prop ]= value
+			for own prop, value of @
+				if (prop isnt 'log') then @log[ prop ]= value
+
 
 
 		disable: =>
 			@enabled= false
-			console.log CUSTOM_LOG+ '.'+ @level+ ' is disabled'
+			if not settings.silentDisable
+				console.log CUSTOM_LOG+ '.'+ @level+ ' is disabled'
 
 
 		enable: =>
 			@enabled= true
-			console.log CUSTOM_LOG+ '.'+ @level+ ' is enabled'
+			if not settings.silentEnable
+				console.log CUSTOM_LOG+ '.'+ @level+ ' is enabled'
 
-
-		#
-		# this was a bad idea, it sucks and will be removed..
-		#
-		assert: ( predicate, description= '' ) =>
-			if typeof predicate is 'string'
-				description= predicate
-			if description
-				description= '('+ description+ ') == '
-
-			if typeof predicate is 'string'
-				predicate= eval predicate
-
-			if predicate then predicate= 'TRUE' else predicate= 'FALSE'
-
-			@log '\n\t'+ customLog.assertMessage+ description+ predicate+ '\n'
-
+	#
 	# end of Log
+	#
 
 
 
 
-	prefixMsg		= init if typeof init is 'string'
+	# create a default log right away
 	logInstance		= new Log 'log', prefixMsg
 	log 				= logInstance.log
 
-	# one function for enable and disable
+
+
+	# abstract function for enable and disable
 	enact= ( method, levels... ) ->
 		levels= intoArray levels
 		for level in levels
@@ -104,23 +113,24 @@ customLog= ( init ) ->
 			else if log[ level ]?
 				log[ level ][ method ]()
 
-	log.enable	= -> enact 'enable', arguments...
-	log.disable	= -> enact 'disable', arguments...
+	log.enable	= (args...) -> enact 'enable', args...
+	log.disable	= (args...) -> enact 'disable', args...
 
 
-	if typeof init is 'object'
-		for level, prefix of init then do (level, prefix) ->
 
-			switch level
-				when 'log'		then logInstance.prefix= prefix
-				when 'assert' then customLog.assertMessage= prefix
-				else log[ level ]= new Log( level, prefix ).log
+	# create log levels/instances from prefixes object
+	for level, prefix of prefixes then do (level, prefix) ->
+		switch level
+			# allow the default log to have a prefix
+			when 'log' then logInstance.prefix= prefix
+			else log[ level ]= new Log( level, prefix ).log
+
+
 
 	return log
-
-customLog.assertMessage= 'Assert: '
-
+#
 # end of customLog
+#
 
 
 
