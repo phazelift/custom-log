@@ -1,6 +1,6 @@
 {
   "name": "custom-log",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A tiny flexible logger",
   "main": "custom-log.min.js",
   "scripts": {
